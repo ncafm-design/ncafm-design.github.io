@@ -405,17 +405,18 @@
                 <h2 class="title is-3">Abstract</h2>
                 <div class="content has-text-justified">
                     <p>
-                        Current Dynamic Texture Synthesis (DyTS) models can synthesize realistic videos. However, they
+                        Processing
+<!--                         Current Dynamic Texture Synthesis (DyTS) models can synthesize realistic videos. However, they
                         require a slow iterative optimization process to synthesize a single fixed-size short video, and
                         they do not offer any post-training control over the synthesis process. We propose Dynamic
-                        Neural Cellular Automata (DyNCA), a framework for real-time and controllable dynamic texture
+                        Neural Cellular Automata Foundation Model (NCA-FM), a framework for real-time and controllable dynamic texture
                         synthesis. Our method is built upon the recently introduced NCA models and can synthesize
                         infinitely long and arbitrary-sized realistic video textures in real time. We quantitatively and
                         qualitatively evaluate our model and show that our synthesized videos appear more realistic than
                         the existing results. We improve the SOTA DyTS performance by 2∼4 orders of magnitude. Moreover,
                         our model offers several real-time video controls including motion speed, motion direction, and
                         an editing brush tool. We exhibit our trained models in an online interactive demo that runs on
-                        local hardware and is accessible on personal computers and smartphones.
+                        local hardware and is accessible on personal computers and smartphones. -->
                     </p>
 
                 </div>
@@ -445,7 +446,7 @@
                 <h2 class="title is-3">How it works?</h2>
                 <div class="content has-text-justified">
 
-                    <img src="images/dynca_video_cut.png" height="100%"/>
+<!--                     <img src="images/dynca_video_cut.png" height="100%"/>
                     <br><br>
                     <p>
                         Starting from a seed state, DyNCA iteratively updates it, generating an image sequence. We
@@ -453,7 +454,7 @@
                         target to obtain the DyNCA training objectives. After training, DyNCA can adapt to seeds of
                         different height and width, and synthesize videos with arbitrary length. Sequentially applying
                         DyNCA updates on the seed synthesizes dynamic texture videos in real-time.
-                    </p>
+                    </p> -->
 
                     <br>
                     <p> The figure below illustrates a single <i>DyNCA</i> step.</p>
@@ -493,20 +494,20 @@
                 <div class="content">
                     <h3 class="title is-5 has-text-centered">Target Appearance</h3>
                     <p>
-                        Our <i>DyNCA</i> model learns a desired texture pattern from a given target
+                        Our <i>NCA-FM</i> model learns a desired texture pattern from a given target
                         appearance image. <br><br><br><br>
                     </p>
-                    <img src="images/style_transfer_appearance/cartoon_fire_6.png" height="100%"/>
+<!--                     <img src="images/style_transfer_appearance/cartoon_fire_6.png" height="100%"/> -->
                     <img src="images/style_transfer_appearance/cartoon_water_1.png" height="100%"/>
-                    <img src="images/style_transfer_appearance/USA1.png" height="100%"/>
-                    <img src="images/style_transfer_appearance/cartoon_fire_4.png" height="100%"/>
+<!--                     <img src="images/style_transfer_appearance/USA1.png" height="100%"/>
+                    <img src="images/style_transfer_appearance/cartoon_fire_4.png" height="100%"/> -->
                     <img src="images/style_transfer_appearance/cartoon_water_3.png" height="100%"/>
-                    <img src="images/style_transfer_appearance/LGBT.jpg" height="100%"/>
-                    <img src="images/style_transfer_appearance/cartoon_fire_2.png" height="100%"/>
+<!--                     <img src="images/style_transfer_appearance/LGBT.jpg" height="100%"/>
+                    <img src="images/style_transfer_appearance/cartoon_fire_2.png" height="100%"/> -->
                     <img src="images/style_transfer_appearance/cartoon_water_2.png" height="100%"/>
-                    <img src="images/style_transfer_appearance/cartoon_fire_1.png" height="100%"/>
+<!--                     <img src="images/style_transfer_appearance/cartoon_fire_1.png" height="100%"/> -->
                     <img src="images/style_transfer_appearance/cartoon_water_4.png" height="100%"/>
-                    <img src="images/style_transfer_appearance/cartoon_fire_3.png" height="100%"/>
+<!--                     <img src="images/style_transfer_appearance/cartoon_fire_3.png" height="100%"/> -->
 
                 </div>
             </div>
@@ -522,47 +523,47 @@
                             appearance image. <br><br><br><br>
                         </p>
 
-                        <video controls playsinline height="100%">
+<!--                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/flames.mp4" type="video/mp4">
-                        </video>
+                        </video> -->
                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/sea_2.mp4" type="video/mp4">
-                        </video>
+<!--                         </video>
                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/flag_2.mp4" type="video/mp4">
                         </video>
 
                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/fireplace_2.mp4" type="video/mp4">
-                        </video>
+                        </video> -->
 
                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/sea_2.mp4" type="video/mp4">
                         </video>
 
-                        <video controls playsinline height="100%">
+<!--                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/flag_2.mp4" type="video/mp4">
                         </video>
 
                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/fireplace_1.mp4" type="video/mp4">
-                        </video>
+                        </video> -->
 
                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/sea_2.mp4" type="video/mp4">
                         </video>
-
+<!-- 
                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/flames.mp4" type="video/mp4">
-                        </video>
+                        </video> -->
 
                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/water_3.mp4" type="video/mp4">
                         </video>
-
+<!-- 
                         <video controls playsinline height="100%">
                             <source src="videos/real_mp4/fireplace_2.mp4" type="video/mp4">
-                        </video>
+                        </video> -->
 
                     </div>
 
@@ -578,45 +579,45 @@
                             resembles the target appearance, while the the concatenation of frames induces the motion of
                             the target dynamics.
                         </p>
-                        <video controls playsinline height="100%">
+<!--                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/flames-cartoon_fire_6.mp4" type="video/mp4">
-                        </video>
-                        <video controls playsinline height="100%">
+                        </video> -->
+                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/sea_2-cartoon_water_1.mp4" type="video/mp4">
                         </video>
-                        <video controls playsinline height="100%">
+<!--                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/flag_2-USA.mp4" type="video/mp4">
                         </video>
-
-                        <video controls playsinline height="100%">
+<!--  -->
+<!--                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/fireplace_2-cartoon_fire_4.mp4" type="video/mp4">
-                        </video>
+                        </video> --> -->
                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/sea_2-cartoon_water_3.mp4" type="video/mp4">
                         </video>
-                        <video controls playsinline height="100%">
+<!--                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/flag_2-LGBT.mp4" type="video/mp4">
-                        </video>
-
+                        </video> -->
+<!-- 
                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/fireplace_1-cartoon_fire_2.mp4" type="video/mp4">
-                        </video>
+                        </video> -->
 
                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/sea_2-cartoon_water_2.mp4" type="video/mp4">
                         </video>
 
-                        <video controls playsinline height="100%">
+<!--                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/flames-cartoon_fire_1.mp4" type="video/mp4">
                         </video>
-
+ -->
                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/water_3-cartoon_water_4.mp4" type="video/mp4">
                         </video>
-
+<!-- 
                         <video controls playsinline height="100%">
                             <source src="videos/style_transfer/fireplace_2-cartoon_fire_3.mp4" type="video/mp4">
-                        </video>
+                        </video> -->
                     </div>
 
                 </div>
