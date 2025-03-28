@@ -64,7 +64,7 @@ const PREFIX = `
     precision highp sampler2D;
     precision highp int;
     
-    
+
 
     // "Hash without Sine" by David Hoskins (https://www.shadertoy.com/view/4djSRW)
     float hash13(vec3 p3) {
@@ -78,6 +78,18 @@ const PREFIX = `
         p3 += dot(p3, p3.yzx+33.33);
         return fract((p3.xx+p3.yz)*p3.zy);
     }
+    
+    vec4 hash43(vec3 p){
+        vec4 p4 = fract(vec4(p.xyzx)  * vec4(.1031, .1030, .0973, .1099));
+        p4 += dot(p4, p4.wzxy+33.33);
+        return fract((p4.xxyz+p4.yzzw)*p4.zywx);
+    }
+    vec4 hash44(vec4 p4) {
+        p4 = fract(p4  * vec4(.1031, .1030, .0973, .1099));
+        p4 += dot(p4, p4.wzxy+33.33);
+        return fract((p4.xxyz+p4.yzzw)*p4.zywx);
+    }
+    
 
     struct Tensor {
         vec2 size;
@@ -95,11 +107,7 @@ const PREFIX = `
 
     vec4 _readUV(Tensor tensor, sampler2D tex, vec2 uv) {
         highp vec4 v = texture2D(tex, uv);
-        highp vec2 p = tensor.packScaleZero;
-        // p.y is the bias
-        // p.x is the scaling factor
-        // the sampled texture values is between 0.0 and 1.0 (?) 
-        v = (v-p.y)*p.x;
+
         return v;
     }
     vec2 _getUV(Tensor tensor, vec2 pos, float ch) {
@@ -111,13 +119,12 @@ const PREFIX = `
         float tx = floor(mod(ch, tensor.gridSize.x));
         float ty = floor(ch / tensor.gridSize.x);
         
-        #ifdef OURS
-            // vec2 p = clamp(pos / tensor.size, 0.0, 1.0 - 1.0 / tensor.size.y); // replicate padding
+        #ifdef CIRCULAR_PADDING
+            highp vec2 p = fract(pos/tensor.size); // circular padding
+            
+        #else
             highp vec2 p = clamp(pos, vec2(0.0, 0.0), tensor.size - 0.5); // replicate padding
             p = p / tensor.size;
-            // vec2 p = clamp(pos / tensor.size, 0.0, 1.0 - 0.0 / tensor.size.y); // replicate padding
-        #else
-            highp vec2 p = fract(pos/tensor.size); // circular padding
         #endif 
         
          
@@ -164,14 +171,9 @@ const PREFIX = `
     }
 
     void setOutput(vec4 v) {
-        highp vec2 p = u_output.packScaleZero;
-        v = v/p.x + p.y;
-        
-        #ifndef OURS
-            v = clamp(v, -2.0, 2.0);
-        #else    
-            // v = clamp(v, -6.0, 6.0);
-        #endif
+        // highp vec2 p = u_output.packScaleZero;
+        // v = v/p.x + p.y;
+        // 
         gl_FragColor = v;
     }
 
@@ -225,79 +227,15 @@ const PREFIX = `
 `;
 
 const PROGRAMS = {
-    bilinear_downsample: `
-    void main() {
-        vec2 xy = floor(getOutputXY()) * 2.0 + 0.5;  // taking floor is necessary
-        float ch = getOutputChannel();
-        vec4 state1 = u_input_read(xy, ch);
-        vec4 state2 = u_input_read(xy + vec2(1.0, 0.0), ch);
-        vec4 state3 = u_input_read(xy + vec2(0.0, 1.0), ch);
-        vec4 state4 = u_input_read(xy + vec2(1.0, 1.0), ch);
-        vec4 state = 0.25 * (state1 + state2 + state3 + state4);
-        setOutput(state);
-        
-    }
-    `,
-    bilinear_upsample_add: `
-    ${defInput('u_perception0')}
-    uniform bool scale_zero;
-    
-    void main() {
-        vec2 xy = getOutputXY();
-        float ch = getOutputChannel();
-        
-        vec2 realXY = xy;
-        #ifdef SPARSE_UPDATE
-            if (scale_zero) {
-            // realXY = texture2D(u_shuffleTex, xy/u_output.size).xy*255.0 + 0.5 + u_shuffleOfs;
-            // realXY = texture2D(u_shuffleTex, xy/u_output.size).xy*(HW.x - 1.0) + 0.5 + u_shuffleOfs;
-            realXY = texture2D(u_shuffleTex, xy/u_output.size).xy + 0.5 + u_shuffleOfs;
-            realXY = mod(realXY, HW);
-            } 
-        #endif
-        
-        vec4 p_current = u_perception0_read(xy, ch);
-        vec2 center = floor(realXY) + 0.5;
-        
-        vec2 p = floor((center + 0.5) / 2.0);
-        // vec2 p = floor(realXY / 2.0);
-
-        vec2 p1 = p + 0.5;
-        vec2 p2 = p - vec2(1.0, 0.0) + 0.5;
-        vec2 p3 = p - vec2(0.0, 1.0) + 0.5;
-        vec2 p4 = p - vec2(1.0, 1.0) + 0.5;
-        
-        // vec2 p1 = clamp(p, vec2(0.0, 0.0), u_input.size - 1.0) + 0.5;
-        // vec2 p2 = clamp(p - vec2(1.0, 0.0), vec2(0.0, 0.0), u_input.size - 1.0) + 0.5;
-        // vec2 p3 = clamp(p - vec2(0.0, 1.0), vec2(0.0, 0.0), u_input.size - 1.0) + 0.5;
-        // vec2 p4 = clamp(p - vec2(1.0, 1.0), vec2(0.0, 0.0), u_input.size - 1.0) + 0.5;
-        
-        vec4 state1 = u_input_read(p1, ch); 
-        vec4 state2 = u_input_read(p2, ch); 
-        vec4 state3 = u_input_read(p3, ch); 
-        vec4 state4 = u_input_read(p4, ch); 
-        
-        // p = p + 0.5;        
-        float w1 = center.x + 1.0 - 2.0 * p.x;
-        float w2 = center.y + 1.0 - 2.0 * p.y;
-        float w3 = 2.0 * p.x + 1.0 - center.x;
-        float w4 = 2.0 * p.y + 1.0 - center.y;
-
-        vec4 state = 0.25 * (state1 * w1 * w2
-                           + state2 * w3 * w2
-                           + state3 * w1 * w4
-                           + state4 * w3 * w4);
-        // setOutput(state4);
-        setOutput(0.5 * (state + p_current));
-        // setOutput(p_current);
-        
-    }
-    `,
     paint: `
     uniform highp vec2 u_pos;
     uniform float u_r;
     uniform highp vec4 u_brush;
     uniform float u_zoom;
+    
+    uniform float u_seed;
+    uniform bool u_control;
+    uniform float u_noise_level;
 
     void main() {
 
@@ -314,24 +252,32 @@ const PROGRAMS = {
         // diff = min(diff, u_output.size-diff); // circular padding for the brush
         if (length(diff)*u_zoom>=u_r) 
           discard;
-        setOutput(u_brush);
+          
+        #ifdef SPARSE_UPDATE
+            setOutput(u_brush);
+            
+        //   if (hash13(vec3(xy, u_seed)) > u_updateProbability) {
+        //     setOutput(vec4(0.0, 0.0, 0.0, 0.0));
+        //     return;
+        //   }
+        #else
+            if (u_control) {
+                setOutput(u_brush);
+            } else {
+                float chn = getOutputChannel();
+                vec4 u = (hash44(vec4(xy_out, chn, u_seed)) - 0.5) * u_noise_level; // Random uniform in  range (-0.125, 0125)
+                setOutput(u);
+            }
+        #endif
+        
 
     }`,
     perception: `
-    const highp mat3 sobelX = mat3(-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0)/8.0;
-    const highp mat3 sobelY = mat3(-1.0,-2.0,-1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0)/8.0;
-    const highp mat3 gauss = mat3(1.0, 2.0, 1.0, 2.0, 4.0-16.0, 2.0, 1.0, 2.0, 1.0)/8.0;
-    const highp mat3 sobelXhex = mat3( 0.0,    -1.0, 1.0, 
-                                       -2.0, 0.0, 2.0, 
-                                         -1.0, 1.0,        0.0)/8.0;
-
-    const highp mat3 sobelYhex = mat3( 0.0,    -2.0,-2.0, 
-                                        0.0, 0.0, 0.0, 
-                                          2.0, 2.0,        0.0)/8.0;
-
-    const highp mat3 gaussHex = mat3(0.0,       2.0, 2.0, 
-                                       2.0, 4.0-16.0, 2.0, 
-                                          2.0, 2.0,        0.0)/8.0;
+    const highp mat3 sobelX = mat3(-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0);
+    const highp mat3 sobelY = mat3(-1.0,-2.0,-1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0);
+    
+    const highp mat3 lapX = mat3(0.5, 0.0, 0.5, 2.0, -6.0, 2.0, 0.5, 0.0, 0.5);
+    const highp mat3 lapY = mat3(0.5, 2.0, 0.5, 0.0, -6.0, 0.0, 0.5, 2.0, 0.5);
 
     vec4 conv3x3(vec2 xy, float inputCh, mat3 filter) {
         highp vec4 a = vec4(0.0);
@@ -344,28 +290,16 @@ const PROGRAMS = {
     }
 
     uniform float u_seed, u_updateProbability;
-    uniform bool scale_zero;
+    uniform float u_dx, u_dy;
     
     void main() {
         vec2 xy = getOutputXY();
 
-        #ifndef SPARSE_UPDATE
-          if (hash13(vec3(xy, u_seed)) > u_updateProbability) {
-            setOutput(vec4(0.0, 0.0, 0.0, 0.0));
-            return;
-          }
-        #endif
-        
+
         #ifdef SPARSE_UPDATE
-            if (scale_zero) {
-            // xy = texture2D(u_shuffleTex, xy/u_output.size).xy*255.0+0.5 + u_shuffleOfs;
             xy = texture2D(u_shuffleTex, xy/u_output.size).xy+0.5 + u_shuffleOfs;
-            // xy = texture2D(u_shuffleTex, xy/u_output.size).xy * (HW.x - 1.0) + 0.5 + u_shuffleOfs;
             xy = mod(xy, u_input.size);
-            } else {
-                // xy = xy;
-                xy = floor(xy) + 0.5;
-            }
+
         #endif
         float ch = getOutputChannel();
         if (ch >= u_output.depth4)
@@ -379,22 +313,25 @@ const PROGRAMS = {
         if (filterBand < 0.5) {
             setOutput(u_input_read(xy, inputCh));
         } else if (filterBand < 2.5) {
-            highp vec4 dx = conv3x3(xy, inputCh, sobelX*(1.0-u_hexGrid) + sobelXhex*u_hexGrid);
-            highp vec4 dy = conv3x3(xy, inputCh, sobelY*(1.0-u_hexGrid) + sobelYhex*u_hexGrid);
+            // highp vec4 dx = conv3x3(xy, inputCh, sobelX);
+            // highp vec4 dy = conv3x3(xy, inputCh, sobelY);
+            // highp vec2 dir = getCellDirection(xy);
+            // float s = dir.x, c = dir.y;
+            // highp vec4 res = filterBand < 1.5 ? dx*c-dy*s / u_dx: dx*s+dy*c / u_dy;
+            // setOutput(res);
+            
+            highp vec4 dx = conv3x3(xy, inputCh, sobelX) / u_dx;
+            highp vec4 dy = conv3x3(xy, inputCh, sobelY) / u_dy;
             highp vec2 dir = getCellDirection(xy);
             float s = dir.x, c = dir.y;
-            highp vec4 res = filterBand < 1.5 ? dx*c-dy*s : dx*s+dy*c;
-            #ifdef OURS
-                res = res * 8.0; // We didn't normalize the kernels
-            #endif
+            highp vec4 res = filterBand < 1.5 ? dx*c-dy*s: dx*s+dy*c;
             setOutput(res);
         
         
         } else {
-            highp vec4 res = conv3x3(xy, inputCh, gauss*(1.0-u_hexGrid) + gaussHex*u_hexGrid);
-            #ifdef OURS
-                res = res * 8.0;  // We didn't normalize the kernels
-            #endif
+            mat3 lap = lapX / (u_dx * u_dx) + lapY / (u_dy * u_dy);
+            highp vec4 res = conv3x3(xy, inputCh, lap);
+
             setOutput(res);
         }
     }`,
@@ -408,7 +345,7 @@ const PROGRAMS = {
     uniform highp vec2 grid_size;
     uniform bool bias, pos_emb, relu;
     
-    const float MAX_PACKED_DEPTH = 50.0;
+    const float MAX_PACKED_DEPTH = 32.0;
     
     vec4 readWeightUnscaled(vec2 p) {
         highp vec4 w = texture2D(u_weightTex, p);
@@ -419,12 +356,12 @@ const PROGRAMS = {
       vec2 xy = getOutputXY();
     
     
-      #ifndef SPARSE_UPDATE
-      if (hash13(vec3(xy, u_seed)) > u_updateProbability) {
-        setOutput(vec4(0.0, 0.0, 0.0, 0.0));
-        return;
-      }
-      #endif
+      // #ifndef SPARSE_UPDATE
+      // if (hash13(vec3(xy, u_seed)) > u_updateProbability) {
+      //   setOutput(vec4(0.0, 0.0, 0.0, 0.0));
+      //   return;
+      // }
+      // #endif
       
       
       float ch = getOutputChannel();
@@ -432,13 +369,18 @@ const PROGRAMS = {
           return;
 
 
-      float d = u_input.depth + 1.0;
+      float d = u_input.depth;
       if (pos_emb) {
         d = d + 2.0;
       }
-      float dy = 1.0 / (d) / u_layout.y;
+      if (bias) {
+        d = d + 1.0;
+      }
+      float dy = 1.0 / (d * u_layout.y);
       // float dy = 1.0/(d)/u_layout.y;
       // float dy = 1.0/(u_input.depth+1.0)/u_layout.y;
+      
+      
       vec2 p = vec2((ch+0.5)/u_output.depth4, dy*0.5);
       vec2 fuzz = (hash23(vec3(xy, u_seed+ch))-0.5)*u_fuzz;
       // vec2 fuzz = vec2(0.0, 0.0);
@@ -453,7 +395,9 @@ const PROGRAMS = {
       
       
       
-      float modelIdx = u_control_read(realXY+fuzz, 0.0).x+0.5;
+      // float modelIdx = u_control_read(realXY+fuzz, 0.0).x+0.5;
+      float modelIdx = 0.5;
+      
       p.x += floor(mod(modelIdx, u_layout.x));
       p.y += floor(modelIdx/u_layout.x);
       p /= u_layout;
@@ -494,7 +438,7 @@ const PROGRAMS = {
     update: `
     ${defInput('u_update')}
     uniform float u_seed, u_updateProbability;
-    uniform float u_rate;
+    uniform float u_dt;
     varying vec2 uv;
 
     void main() {
@@ -513,11 +457,11 @@ const PROGRAMS = {
             // update = u_update_read(shuffleInfo.xy*(HW.x - 1.0)+0.5, getOutputChannel());
         }
       #else
-        if (hash13(vec3(xy, u_seed)) <= u_updateProbability) {
-            update = u_update_readUV(uv);    
-        }
+        // if (hash13(vec3(xy, u_seed)) <= u_updateProbability) {
+        update = u_update_readUV(uv);    
+        // }
       #endif
-      setOutput(state + update * u_rate);
+      setOutput(state + update * u_dt);
     }`,
     vis: `
     uniform float u_raw;
@@ -581,21 +525,15 @@ const PROGRAMS = {
                 
                 
 
-                #ifdef OURS                                    
-                    rgb = clamp(rgb + 0.5, 0.0, 1.0);
-                #else
-                    rgb = rgb / 2.0 + 0.5;
-                #endif
+                rgb = clamp(rgb + 0.5, 0.0, 1.0);
+
                 
                 gl_FragColor = vec4(rgb, 1.0);
  
             } else {
                 gl_FragColor = texture2D(u_input_tex, xy);
-                #ifdef OURS                    
-                    gl_FragColor = clamp(gl_FragColor + 0.5, 0.0, 1.0);
-                #else
-                    gl_FragColor = gl_FragColor / 2.0 + 0.5;
-                #endif
+                gl_FragColor = clamp(gl_FragColor + 0.5, 0.0, 1.0);
+
                 gl_FragColor.a = 1.0;
             } 
         } else {
@@ -609,11 +547,8 @@ const PROGRAMS = {
                 fp = r.xy;
             }
 
-            #ifdef OURS
-                vec3 cellRGB = clamp(u_input_read(xy, 0.0).rgb + 0.5, 0.0, 1.0);
-            #else
-                vec3 cellRGB = u_input_read(xy, 0.0).rgb/2.0+0.5;
-            #endif
+            vec3 cellRGB = clamp(u_input_read(xy, 0.0).rgb + 0.5, 0.0, 1.0);
+
             
             vec3 rgb = cellRGB;
             if (3.0 < u_zoom) {
@@ -726,7 +661,7 @@ function createDenseInfo(gl, params) {
     };
 
     info.pos_emb = params.pos_emb ? "pos_emb" in params : false;
-    info.bias = params.bias ? "bias" in params : true;
+    info.bias = params.bias;
     var ch_in = in_n;
     ch_in = info.pos_emb ? ch_in - 2 : ch_in;
     ch_in = info.bias ? ch_in - 1 : ch_in;
@@ -758,37 +693,43 @@ function createDenseInfo(gl, params) {
     return info;
 }
 
-export class DyNCA {
-    constructor(gl, models, gridSize, gui, our_version = true) {
+export class NoiseNCA {
+    constructor(gl, models, gridSize, gui) {
         // models is basically the json file
 
         self = this;
         this.gl = gl;
 
-        this.n_perception_scales = "n_perception_scales" in models ? models.n_perception_scales : 1;
+
+
         // alert(this.n_perception_scales)
 
         this.gridSize = gridSize || [96, 96];
 
         this.updateProbability = 0.5;
-        this.shuffledMode = true; // changed
+        this.shuffledMode = false; // changed
         // alert(this.shuffledMode)
+        this.circular_padding = true;
 
         this.rotationAngle = 0.0;
-        this.rate = 1.0;
+        this.dt = 1.0;
+        this.dx = 1.0;
+        this.dy = 1.0;
         this.alignment = 0;
-        this.fuzz = 8.0;
+        this.fuzz = 30.0;
         this.perceptionCircle = 0.0;
         this.arrowsCoef = 0.0;
         this.visMode = 'color';
         this.hexGrid = false;
 
-        this.our_version = our_version;
+        this.noise_level = models.noise_level;
 
         this.layers = [];
         this.setWeights(models);
 
-        const defs = (this.our_version ? '#define OURS\n' : '') + (this.shuffledMode ? '#define SPARSE_UPDATE\n' : '');
+        const defs = (this.circular_padding ? '#define CIRCULAR_PADDING\n' : '') +
+            (this.shuffledMode ? '#define SPARSE_UPDATE\n' : '');
+
 
         this.progs = createPrograms(gl, defs);
 
@@ -880,15 +821,9 @@ export class DyNCA {
 
         };
 
-        // For now we only support multi-scale perception with 2 scales
-        if (this.n_perception_scales > 1) {
-            this.buf.state_down = createTensor(gl, Math.floor(gridW / 2 + 0.5), Math.floor(gridH / 2 + 0.5), channel_n, no_quantization, true);
-            this.buf.state_down_up = createTensor(gl, gridW, gridH, channel_n, no_quantization, true);
-            this.buf.perception1 = createTensor(gl, Math.floor(gridW / 2 + 0.5), Math.floor(gridH / 2 + 0.5), perception_n, no_quantization, true);
-            this.buf.perception1_up = createTensor(gl, gridW, gridH, perception_n, no_quantization, true);
-            this.buf.perception = createTensor(gl, gridW, updateH, perception_n, no_quantization, true);
 
-        }
+        // For now we only support multi-scale perception with 2 scales
+
 
         for (let i = 0; i < this.layers.length; ++i) {
             const layer = this.layers[i];
@@ -910,43 +845,27 @@ export class DyNCA {
             this.shuffleOfs = [Math.floor(Math.random() * gridW), Math.floor(Math.random() * gridH)];
         }
 
-        if (stage == 'all' || stage == 'Perception' || stage == 'Multi-Scale Perception') {
+        if (stage == 'all' || stage == 'Perception') {
             this.runLayer(self.progs.perception, this.buf.perception0, {
                 u_input: this.buf.state, u_angle: this.rotationAngle / 180.0 * Math.PI,
-                u_alignment: this.alignment, u_hexGrid: this.hexGrid,
-                u_seed: seed, u_updateProbability: this.updateProbability, scale_zero: true,
+                u_alignment: this.alignment, u_hexGrid: this.hexGrid, u_dx: this.dx, u_dy: this.dy,
+                u_seed: seed, u_updateProbability: this.updateProbability,
             });
         }
 
-        if (this.n_perception_scales > 1) {
-            this.runLayer(self.progs.bilinear_downsample, this.buf.state_down, {
-                u_input: this.buf.state,
-            });
-            this.runLayer(self.progs.perception, this.buf.perception1, {
-                u_input: this.buf.state_down, u_angle: this.rotationAngle / 180.0 * Math.PI,
-                u_alignment: this.alignment, u_hexGrid: this.hexGrid,
-                u_seed: seed, u_updateProbability: this.updateProbability, scale_zero: false,
-            });
-
-            this.runLayer(self.progs.bilinear_upsample_add, this.buf.perception, {
-                u_input: this.buf.perception1, u_perception0: this.buf.perception0, scale_zero: true,
-            });
-            [this.buf.perception0, this.buf.perception] = [this.buf.perception, this.buf.perception0];
-        }
 
         let inputBuf = this.buf.perception0;
 
         for (let i = 0; i < this.layers.length; ++i) {
             if (stage == 'all' || stage == `FC Layer${i + 1}`)
                 var relu = i == 0 ? true : false;
-                var rate = i == 0 ? 1.0 : this.rate;
-            this.runDense(this.buf[`layer${i}`], inputBuf, this.layers[i], relu, seed, rate);
+            this.runDense(this.buf[`layer${i}`], inputBuf, this.layers[i], relu, seed);
             inputBuf = this.buf[`layer${i}`];
         }
-        if (stage == 'all' || stage == 'Stochastic Update') {
+        if (stage == 'all' || stage == 'Update') {
             this.runLayer(this.progs.update, this.buf.newState, {
                 u_input: this.buf.state, u_update: inputBuf,
-                u_unshuffleTex: this.unshuffleTex, u_rate: this.rate,
+                u_unshuffleTex: this.unshuffleTex, u_dt: this.dt,
                 u_seed: seed, u_updateProbability: this.updateProbability
             });
         }
@@ -995,7 +914,7 @@ export class DyNCA {
 
         for (let i = 0; i < this.layers.length; ++i)
             ops.push(`FC Layer${i + 1}`);
-        ops.push('Stochastic Update');
+        ops.push('Update');
         let perOpTotal = 0.0;
         const perOp = [];
         for (const op of ops) {
@@ -1022,13 +941,21 @@ export class DyNCA {
     paint(x, y, r, brush) {
         // the model idx is passed as the brush
         this.runLayer(this.progs.paint, this.buf.control, {
-            u_pos: [x, y], u_r: r, u_brush: [brush, 0, 0, 0], u_hexGrid: this.hexGrid, u_zoom: 1.0
+            u_pos: [x, y], u_r: r, u_brush: [brush, 0, 0, 0], u_hexGrid: this.hexGrid, u_zoom: 1.0, u_control: true,
         });
     }
 
     clearCircle(x, y, r, brush, zoom = 1.0) {
+        let u_seed = Math.random() * 1000.0;
         self.runLayer(self.progs.paint, this.buf.state, {
-            u_pos: [x, y], u_r: r, u_brush: [0.0, 0.0, 0.0, 0.0], u_hexGrid: this.hexGrid, u_zoom: zoom
+            u_pos: [x, y],
+            u_r: r,
+            u_brush: [0.0, 0.0, 0.0, 0.0],
+            u_hexGrid: this.hexGrid,
+            u_zoom: zoom,
+            u_seed: u_seed,
+            u_control: false,
+            u_noise_level: this.noise_level,
         });
     }
 
