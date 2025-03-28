@@ -1,4 +1,4 @@
-import {NoiseNCA} from './noiseNCA.js'
+import {NoiseNCA} from './ncafm.js'
 
 function isInViewport(element) {
     var rect = element.getBoundingClientRect();
@@ -75,7 +75,7 @@ export function createDemo(divId) {
         dy: 1.0,
         isotropic: true,
 
-        texture_name: "bubbly_0101",
+        texture_name: "LYM-TCGA-AAWGSCHH",
 
 
         texture_img: null,
@@ -88,7 +88,7 @@ export function createDemo(divId) {
     let gui = null;
     let currentTexture = null;
 
-    const initTexture = "bubbly_0101";
+    const initTexture = "LYM-TCGA-AAWGSCHH";
 
     var videoStream = canvas.captureStream(30);
     var mediaRecorder = new MediaRecorder(videoStream);
