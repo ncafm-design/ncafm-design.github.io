@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60TLTRN7TQ"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SJ9P1D5C47"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -12,17 +15,21 @@
 
         gtag('js', new Date());
 
-        gtag('config', 'G-60TLTRN7TQ');
+        gtag('config', 'G-SJ9P1D5C47');
     </script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 
     <meta charset="utf-8">
     <meta name="description"
-          content="Neural Cellular Automata Foundation Model">
+          content="NoiseNCA: Noisy Seed Improves Spatio-Temporal Continuity of Neural Cellular Automata">
     <meta name="keywords"
-          content="DyhNCA, NCA, Textures, DynamiTextures, Synthesis, Dynamic Texture Synthesis, Neural Cellular Automata, Turing Patterns">
+          content="NCA, Textures, Texture Synthesis, Neural Cellular Automata, Turing Patterns, Reaction Diffusion,
+          Partial Differential Equations, PDE">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Neural Cellular Automata Foundation Model</title>
+    <title>NoiseNCA: Noisy Seed Improves Spatio-Temporal Continuity of Neural Cellular Automata</title>
 
 
     <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
@@ -50,14 +57,13 @@
     <script src="https://distill.pub/template.v2.js"></script>
     <link rel="stylesheet" href="style.css">
     <script src="twgl.min.js"></script>
-    <script type="module" src="./dynca.js"></script>
+    <script type="module" src="noiseNCA.js"></script>
     <script type="module" src="./demo.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
     </script>
     <script type="text/x-mathjax-config">
-  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
     </script>
 
 </head>
@@ -101,49 +107,45 @@
         <div class="container is-max-desktop">
             <div class="columns is-centered">
                 <div class="column has-text-centered">
-                    <h1 class="title is-1 publication-title">Neural Cellular Automata Foundation Model</h1>
-                    <div class="is-size-5 publication-authors">
-                        <span class="author-block">
-                            <a href="https://scholar.google.com/citations?hl=zh-CN&user=thYeoHAAAAAJ">Qing Li</a>,</span>
-                        <span class="author-block">
-                            <a href="https://scholar.google.com/citations?hl=zh-TW&user=9ZT29A4AAAAJ">Guangyu Wang</a></span>
-<!--                         <span class="author-block">
-                            <a href="https://scholar.google.com/citations?user=kCy8JG8AAAAJ&hl=en">Tong Zhang</a><sup>*</sup>,</span>
-                        <span class="author-block"> -->
-<!--                             <a href="https://www.epfl.ch/labs/ivrl/">Sabine Süsstrunk</a></span> -->
+                    <h1 class="title is-2 publication-title">NoiseNCA: Noisy Seed Improves Spatio-Temporal Continuity of
+                        Neural
+                        Cellular Automata</h1>
 
 
-                    </div>
-                    <div class="is-size-6 publication-authors">
-                        <span class="author-block">Guangyu Wang Lab</span>
-                    </div>
-                    <!--                    <div class="is-size-5 publication-authors">-->
-                    <!--                        <span class="author-block">TMC</span>-->
-                    <!--                    </div>-->
-                    <div class="is-size-6 publication-authors">
-                        <span class="author-block">Houston Methodist Research Institute</span>
-                    </div>
+                                        <div class="is-size-5 publication-authors">
+                                            <span class="author-block">
+                                                <a href="https://scholar.google.com/citations?hl=en&user=bddQ6pQAAAAJ">Ehsan Pajouheshgar</a>,</span>
+                                            <span class="author-block">
+                                                <a href="https://scholar.google.com/citations?user=jvCvNPQAAAAJ&hl=en/">Yitao Xu</a>,</span>
+                                            <span class="author-block">
+                                                <a href="https://www.epfl.ch/labs/ivrl/">Sabine Süsstrunk</a></span>
 
-                    <div class="is-size-4 publication-authors">
-                        <span class="author-block">Processing</span>
-                    </div>
 
-                    <div class="column has-text-centered">
-                        <div class="publication-links">
-                            <!-- PDF Link. -->
-                            <!--                            <span class="link-block">-->
-                            <!--                <a href=""-->
-                            <!--                   class="external-link button is-normal is-rounded is-dark">-->
-                            <!--                  <span class="icon">-->
-                            <!--                      <i class="fas fa-file-pdf"></i>-->
-                            <!--                  </span>-->
-                            <!--                  <span>Paper</span>-->
-                            <!--                </a>-->
-                            <!--              </span>-->
+                                        </div>
+                                        <div class="is-size-6 publication-authors">
+                                            <span class="author-block">Image and Visual Representation Lab (IVRL)</span>
+                                        </div>
 
-                            <!-- Arxiv. -->
-                            <span class="link-block">
-                                <a href="https://guangyuwanglab.github.io/web/"
+                                        <div class="is-size-6 publication-authors">
+                                            <span class="author-block">École Polytechnique Fédérale de Lausanne (EPFL)</span>
+                                        </div>
+
+                                        <div class="is-size-4 publication-authors">
+                                            <span class="author-block">Artificial Life 2024 Conference</span>
+                                        </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="columns is-centered has-text-centered">
+                <span class="link-block">
+                                <a href="https://arxiv.org/abs/2404.06279"
                                    class="external-link button is-normal is-rounded">
                                   <span class="icon">
                                       <i class="ai ai-arxiv"></i>
@@ -152,238 +154,284 @@
                                 </a>
                             </span>
 
-                            <!-- Code Link. -->
                             <span class="link-block">
-                                <a href="https://github.com/GuangyuWangLab2021"
-                                   class="external-link button is-normal is-rounded">
-                                    <span class="icon"><i class="fab fa-github"></i></span>
-                                    <span>GitHub</span>
-                                </a>
-                            </span>
-
-                            <!-- Video Link. -->
-                            <span class="link-block">
-                <a href="https://guangyuwanglab.github.io/web/"
+                <a href="https://github.com/IVRL/NoiseNCA" target="_blank"
                    class="external-link button is-normal is-rounded">
-                  <span class="icon">
-                      <i class="fab fa-youtube"></i>
-                  </span>
-                  <span>Video</span>
-                </a>
+                <span class="icon">
+                  <svg class="svg-inline--fa fa-github fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab"
+                       data-icon="github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"
+                       data-fa-i2svg=""><path fill="currentColor"
+                                              d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+                    <!-- <i class="fab fa-github"></i> Font Awesome fontawesome.com -->
+                </span>
+                <span>GitHub</span>
+              </a>
               </span>
-                            <!-- Supplementary. -->
+
+                            <span class="link-block">
+              <a href="https://colab.research.google.com/github/IVRL/NoiseNCA/blob/main/colab.ipynb"
+                 target="_blank" class="external-link button is-normal is-rounded">
+                <span class="icon">
+                    <svg class="svg-inline--fa fa-infinity fa-w-20" aria-hidden="true" focusable="false"
+                         data-prefix="fas" data-icon="infinity" role="img" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor"
+                                                                      d="M471.1 96C405 96 353.3 137.3 320 174.6 286.7 137.3 235 96 168.9 96 75.8 96 0 167.8 0 256s75.8 160 168.9 160c66.1 0 117.8-41.3 151.1-78.6 33.3 37.3 85 78.6 151.1 78.6 93.1 0 168.9-71.8 168.9-160S564.2 96 471.1 96zM168.9 320c-40.2 0-72.9-28.7-72.9-64s32.7-64 72.9-64c38.2 0 73.4 36.1 94 64-20.4 27.6-55.9 64-94 64zm302.2 0c-38.2 0-73.4-36.1-94-64 20.4-27.6 55.9-64 94-64 40.2 0 72.9 28.7 72.9 64s-32.7 64-72.9 64z"></path></svg>
+                    <!-- <i class="fas fa-infinity"></i> Font Awesome fontawesome.com -->
+                </span>
+                <span>Colab</span>
+              </a>
+             </span>
+
+
                             <span class="link-block">
                                 <a href="supplementary/"
                                    class="external-link button is-normal is-rounded">
                                   <span class="icon">
-                      <i class="fas fa-folder"></i>
-                            </span>
+                                <i class="fas fa-folder"></i>
+                                  </span>
                                   <span>Supplementary</span>
                                 </a>
                             </span>
-
-
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
     </div>
+
 </section>
 
 
 <section class="section is-light">
     <div class="container is-max-desktop">
-        
-        <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-            <a class="navbar-item">
-      <span class="icon">
-          <i class="fas fa-home"></i>
-      </span>
-            </a>
 
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" id="select_demo_type">
-                    Demo Type: Vector Field Motion
-                </a>
-                <div class="navbar-dropdown">
-                    <a class="navbar-item" id="exp_type_vector_motion"> Motion from a Vector Field</a>
-                    <a class="navbar-item" id="exp_type_video_motion"> Motion From a Video</a>
-                </div>
-            </div>
+        <div class="is-centered has-text-centered">
+            <p style="font-size: 14pt">
+                In addition to the common interactive controls in NCA models such as <i>Cell Alignment</i> and <i>Rotation</i>,
+                and <i>Regeneration Brush</i>, <b>NoiseNCA</b> allows continuous control over the rate of pattern
+                formation and the scale of the synthesized pattern using the $\Delta t$ and $(\Delta x, \Delta y)$
+                sliders,
+                respectively.
+            </p>
+
+            <br>
         </div>
-        <div class="columns is-centered has-text-centered">
-        </div>
-    </div>
-</section>
 
-<section class="hero teaser">
-    <div class="container is-max-desktop">
+        <div class="l-body-outset grid" id="demo">
+            <div>
+                <canvas id="demo-canvas"></canvas>
 
+                <div class="demo-controls">
+                    <div class="tooltip">
+                        <span id="play-pause">
 
-        <div class="hero-body">
-            <div class="l-body-outset grid" id="demo">
-                <div>
-                    <canvas id="demo-canvas"></canvas>
-
-                    <div class="demo-controls">
-                        <div class="play-reset tooltip" style="text-align: left;">
-            <span id="play-pause">
-
-              <svg class="icon" id="play"><use xlink:href="#playIcon"></use></svg>
-              <svg class="icon" id="pause" style="display: none;"><use xlink:href="#pauseIcon"></use></svg>
+              <svg class="demo-icon" id="play" style="display: none;"><use xlink:href="#playIcon"></use></svg>
+              <svg class="demo-icon" id="pause"><use xlink:href="#pauseIcon"></use></svg>
             </span>
-                            <svg class="icon" id="reset">
-                                <use xlink:href="#resetIcon"></use>
-                            </svg>
+                        <svg class="demo-icon" id="reset">
+                            <use xlink:href="#resetIcon"></use>
+                        </svg>
+                        <svg class="demo-icon" id="zoomIn">
+                            <use xlink:href="#zoomInIcon"></use>
+                        </svg>
+                        <svg class="demo-icon disabled" id="zoomOut">
+                            <use xlink:href="#zoomOutIcon"></use>
+                        </svg>
 
-                            <label><img id="benchmark"
-                                        src="images/benchmark.png" width="50px" height="50px"/></label>
-
-                        </div>
-                        <div class="speed">
-                            <input type="range" id="speed" min="-4" max="4" step="1" value="0"></br>Steps / frame: <label
-                                id="speedLabel"></label>
-
-                        </div>
-
-                        <div style="text-align: right;">
-                            <span id="record">
+                        <span id="record">
                                 <img id="record_off" src="images/record_off.png" width="40px" height="40px"
                                      style="padding: 4px; padding-bottom: 2px"/>
                                 <img id="record_on" src="images/record_on.png" width="40px" height="40px"
                                      style="padding: 4px; padding-bottom: 2px; display: none;"/>
-                            </span>
-                            <svg class="icon" id="zoomIn">
-                                <use xlink:href="#zoomInIcon"></use>
-                            </svg>
-                            <svg class="icon disabled" id="zoomOut">
-                                <use xlink:href="#zoomOutIcon"></use>
-                            </svg>
-                        </div>
-                        <div id='brushSelect' class="button-group">
-                            <label>
-                                <input type="radio" name="brush"><img
-                                    src="images/brush_S.png" width="38px" height="38px"/>
-                            </label>
-                            <label>
-                                <input type="radio" name="brush"><img src="images/brush_M.png" width="38px"
-                                                                      height="38px"/>
-                            </label>
-                            <label>
-                                <input type="radio" name="brush" checked="checked"><img
-                                    src="images/brush_L.png" width="38px" height="38px"/>
-                            </label>
-                            <br> Brush Size
-                        </div>
+                        </span>
 
-                        <div>
-                            <input type="range" id="rotation" min="0" max="360" step="1" value="0"></br>Rotation: <label
-                                id="rotationLabel"></label><br>
+<!--                        <label>-->
+<!--                            <img id="screenshot" src="images/screenshot.png" width="30px" height="30px"/>-->
+<!--                        </label>-->
 
-<!--                            <input type="range" id="rate" min="0.01" max="1.0" step="0.01" value="1.0"></br>Speed: <label id="rateLabel"></label><br>-->
+                        <!--                            <label><img id="benchmark"-->
+                        <!--                                        src="images/benchmark.png" width="50px" height="50px"/></label>-->
 
-
-
-                        </div>
-                        <div id='configSelect' class="button-group">
-                            <label>
-                                <input type="radio" name="config"><img
-                                    src="images/config_S.png" width="38px" height="38px"/>
-                            </label>
-                            <label>
-                                <input type="radio" name="config" checked="checked"><img src="images/config_L.png"
-                                                                                         width="38px"
-                                                                                         height="38px"/>
-                            </label>
-                            <br>NCA-FM Config
-                        </div>
-                        <div id='alignSelect' class="button-group">
-                            <label>
-                                <input type="radio" checked="checked" name="align"><img
-                                    src="images/icons.svg#alignRegular"/>
-                            </label>
-                            <label>
-                                <input type="radio" name="align"><img src="images/icons.svg#alignPolar"/>
-                            </label>
-                            <label>
-                                <input type="radio" name="align"><img src="images/icons.svg#alignDipole"/>
-                            </label>
-                            <br>Local Coordinate <br>Transformation
-                        </div>
-
-                        <div>
-
-                            <input type="range" id="resolution" min="-2" max="2" step="1" value="0"></br>Resolution:
-                            <label
-                                    id="resolutionLabel"></label>
-                        </div>
-                        <!--            <div id='RotPosEmb' class="button-group">-->
-                        <!--                <label>-->
-                        <!--                    <input type="radio" checked="checked" name="rpe"><img src="images/icons.svg#gridSquare"/>-->
-                        <!--                </label>-->
-                        <!--                <label>-->
-                        <!--                    <input type="radio" name="grid" id='nrpe'><img src="images/icons.svg#gridHex"/>-->
-                        <!--                </label>-->
-                        <!--                <br>Rotate Positional <br>Embedding-->
-                        <!--            </div>-->
                     </div>
-                    <br>
-                    <div id="demo-tip">
+                    <div class="speed">
+                        <input type="range" id="speed" min="-4" max="4" step="1" value="0"></br>Steps / Frame:
+                        <label
+                                id="speedLabel"></label>
 
-                        <img id="pointer" src="images/pointer.svg">
-                        <div class="hint ">
-                            Click or tap the image to erase parts of the pattern.
+                    </div>
 
-                        </div>
+                    <div style="text-align: center; background: #eee;">
+                        <label class="toggler-wrapper style-19">
 
+                            <input type="checkbox" id="scaling_mode" checked="checked">
+                            <div class="toggler-slider">
+                                <div class="toggler-knob"></div>
+                            </div>
+
+
+                        </label>
+
+
+                        <!--                        <br><br><br>-->
+                        <!--                        &nbsp; Scaling Mode &nbsp;<hr>-->
+
+
+                    </div>
+
+
+                    <div>
+
+                        <input type="range" id="dx" min="-0.585" max="1.0" step="0.001" value="0.0"></br>$\Delta x
+                        = $
+                        <label
+                                id="dxLabel"></label>
+
+                        <input type="range" id="dy" min="-0.585" max="1.0" step="0.001" value="0.0"></br>$\Delta y
+                        = $
+                        <label
+                                id="dyLabel"></label>
+                    </div>
+
+
+                    <div id='brushSelect' class="button-group">
+                        <label>
+                            <input type="radio" name="brush"><img
+                                src="images/brush_S.png" width="38px" height="38px"/>
+                        </label>
+                        <label>
+                            <input type="radio" name="brush"><img src="images/brush_M.png" width="38px"
+                                                                  height="38px"/>
+                        </label>
+                        <label>
+                            <input type="radio" name="brush" checked="checked"><img
+                                src="images/brush_L.png" width="38px" height="38px"/>
+                        </label>
+                        <br> Brush Size
+
+                    </div>
+
+                    <div>
+                        <input type="range" id="dt" min="0.01" max="1.0" step="0.01" value="1.0"></br>$\Delta t =
+                        $
+                        <label
+                                id="dtLabel"></label><br>
+
+
+                    </div>
+
+
+                    <div id='alignSelect' class="button-group">
+                        <label>
+                            <input type="radio" checked="checked" name="align"><img
+                                src="images/icons.svg#alignRegular"/>
+                        </label>
+                        <label>
+                            <input type="radio" name="align"><img src="images/icons.svg#alignPolar"/>
+                        </label>
+                        <label>
+                            <input type="radio" name="align"><img src="images/icons.svg#alignDipole"/>
+                        </label>
+                        <br>Cell Alignment
+                    </div>
+                    <!--                        <div id='configSelect' class="button-group">-->
+                    <!--                            <label>-->
+                    <!--                                <input type="radio" name="config"><img-->
+                    <!--                                    src="images/config_S.png" width="38px" height="38px"/>-->
+                    <!--                            </label>-->
+                    <!--                            <label>-->
+                    <!--                                <input type="radio" name="config" checked="checked"><img src="images/config_L.png"-->
+                    <!--                                                                                         width="38px"-->
+                    <!--                                                                                         height="38px"/>-->
+                    <!--                            </label>-->
+                    <!--                            <br>NoiseNCA Config-->
+                    <!--                        </div>-->
+
+                    <div>
+                        <input type="range" id="rotation" min="0" max="360" step="1" value="0"></br>Rotation: <label
+                            id="rotationLabel"></label><br>
+                        <input type="range" id="resolution" min="-2" max="2" step="1" value="0"></br>Resolution:
+                        <label
+                                id="resolutionLabel"></label>
+                    </div>
+                    <!--            <div id='RotPosEmb' class="button-group">-->
+                    <!--                <label>-->
+                    <!--                    <input type="radio" checked="checked" name="rpe"><img src="images/icons.svg#gridSquare"/>-->
+                    <!--                </label>-->
+                    <!--                <label>-->
+                    <!--                    <input type="radio" name="grid" id='nrpe'><img src="images/icons.svg#gridHex"/>-->
+                    <!--                </label>-->
+                    <!--                <br>Rotate Positional <br>Embedding-->
+                    <!--            </div>-->
+                </div>
+                <br>
+                <div id="demo-tip">
+
+                    <img id="pointer" src="images/pointer.svg">
+                    <div class="hint ">
+                        Click or tap the image to erase parts of the pattern.
 
                     </div>
 
 
                 </div>
+                <div class="is-left has-text-left">
+                    <p style="font-size: 10pt">
+                        When changing $(\Delta x, \Delta y)$, we automatically adjust the value of $\Delta t$ to avoid
+                        the Euler integration from overshooting.
+                        <br>
+                        In the Isotropic mode, the scaling factors are forced to be equal $\Delta x = \Delta y$.
 
+                    </p>
 
-                <div id="pattern-controls">
-                    <div class="pattern-selector-title" id="pattern_selector_title">
-                        <span>Target Appearance</span>
-                    </div>
-                    <!--                    <div class="texture-overlay overlaygrad">-->
-                    <!--                    </div>-->
-                    <!--                    <div class="texture-overlay overlayicon">-->
-                    <!--                    </div>-->
-                    <div id="texture" class="pattern-selector">
-                        <!-- a hacky way to add some padding, so the fadeout doesn't cover items in the scroll. -->
-                        <div class="whitespace"></div>
-                    </div>
-                    <div class="pattern-selector-title" id="motion_selector_title">
-                        <span>Target Vector Field</span>
-                    </div>
-                    <!--                    <div class="motion-overlay overlaygrad" id="motion_overlay_grad">-->
-                    <!--                    </div>-->
-                    <!--                    <div class="motion-overlay overlayicon" id="motion_overlay_icon">-->
-                    <!--                    </div>-->
-                    <div id="motion" class="pattern-selector">
-                        <div class="whitespace"></div>
-                    </div>
-                    <div id="texhint">
-
-                        <div id="origtex">
-                        </div>
-                        <span id="texhinttext"></span>
-                        <div id="origmot"></div>
-                        <span id="mothinttext"></span>
-                    </div>
-
-
+                    <br>
                 </div>
 
 
             </div>
 
+
+            <div id="pattern-controls">
+                <div class="pattern-selector-title" id="pattern_selector_title">
+                    <span>Target Appearance</span>
+                </div>
+                <!--                    <div class="texture-overlay overlaygrad">-->
+                <!--                    </div>-->
+                <!--                    <div class="texture-overlay overlayicon">-->
+                <!--                    </div>-->
+                <div id="texture" class="pattern-selector">
+                    <!-- a hacky way to add some padding, so the fadeout doesn't cover items in the scroll. -->
+                    <div class="whitespace"></div>
+                </div>
+
+                <!--                    <div class="motion-overlay overlaygrad" id="motion_overlay_grad">-->
+                <!--                    </div>-->
+                <!--                    <div class="motion-overlay overlayicon" id="motion_overlay_icon">-->
+                <!--                    </div>-->
+
+                <div id="texhint">
+
+                    <div id="origtex">
+                    </div>
+                    <span id="texhinttext"></span>
+                </div>
+
+
+            </div>
+
+
+        </div>
+        <div class="columns is-centered has-text-centered">
+            <div class="column">
+                <h2 class="title is-5">Multiscale Video</h2>
+                <video id="multiscale_video" autoplay controls muted loop playsinline height="100%" width="100%">
+                </video>
+            </div>
+
+
+        </div>
+        <div class="is-centered has-text-centered">
+            <p style="font-size: 14pt">
+                By varying the value of $(\Delta x, \Delta y)$ across the image, NoiseNCA allows creating Multiscale
+                patterns within
+                a single image. Notice how the scale of the patterns seamlessly changes from left to right.
+            </p>
+
+            <br>
         </div>
     </div>
 </section>
@@ -397,18 +445,24 @@
                 <h2 class="title is-3">Abstract</h2>
                 <div class="content has-text-justified">
                     <p>
-                        Processing
-<!--                         Current Dynamic Texture Synthesis (DyTS) models can synthesize realistic videos. However, they
-                        require a slow iterative optimization process to synthesize a single fixed-size short video, and
-                        they do not offer any post-training control over the synthesis process. We propose Dynamic
-                        Neural Cellular Automata Foundation Model (NCA-FM), a framework for real-time and controllable dynamic texture
-                        synthesis. Our method is built upon the recently introduced NCA models and can synthesize
-                        infinitely long and arbitrary-sized realistic video textures in real time. We quantitatively and
-                        qualitatively evaluate our model and show that our synthesized videos appear more realistic than
-                        the existing results. We improve the SOTA DyTS performance by 2∼4 orders of magnitude. Moreover,
-                        our model offers several real-time video controls including motion speed, motion direction, and
-                        an editing brush tool. We exhibit our trained models in an online interactive demo that runs on
-                        local hardware and is accessible on personal computers and smartphones. -->
+                        Neural Cellular Automata (NCA) is a class of Cellular Automata where the update rule is
+                        parameterized by a neural network that can be trained using gradient descent.
+                        In this paper, we focus on NCA models used for texture synthesis, where the update rule is
+                        inspired by partial differential equations (PDEs) describing reaction-diffusion systems. To
+                        train the NCA model, the spatio-termporal domain is discretized, and Euler integration is used
+                        to numerically simulate the PDE. However, whether a trained NCA truly learns the continuous
+                        dynamic described by the corresponding PDE or merely overfits the discretization used in
+                        training remains an open question. We study NCA models at the limit where space-time
+                        discretization approaches continuity.
+                        We find that existing NCA models tend to overfit the training discretization, especially in the
+                        proximity of the initial condition, also called "seed". To address this, we propose a solution
+                        that utilizes uniform noise as the initial condition. We demonstrate the effectiveness of our
+                        approach in preserving the consistency of NCA dynamics across a wide range of spatio-temporal
+                        granularities. Our improved NCA model enables two new test-time interactions by allowing
+                        continuous control over the speed of pattern formation and the scale of the synthesized
+                        patterns. We demonstrate this new NCA feature in our interactive online demo. Our work reveals
+                        that NCA models can learn continuous dynamics and opens new venues for NCA research from a
+                        dynamical systems' perspective.
                     </p>
 
                 </div>
@@ -430,139 +484,15 @@
     </div>
 </section>
 
-<section class="section is-light">
-    <div class="container is-max-desktop">
-        <!-- Abstract. -->
-        <div class="columns is-centered has-text-centered">
-            <div class="column is-four-fifths">
-                <h2 class="title is-3">How it works?</h2>
-                <div class="content has-text-justified">
-
-<!--                     <img src="images/dynca_video_cut.png" height="100%"/>
-                    <br><br>
-                    <p>
-                        Starting from a seed state, NCA-FM iteratively updates it, generating an image sequence. 
-
-                    </p> -->
-
-                    <br>
-                    <p> The figure below illustrates a single <i>NCA-FM</i> step.</p>
-
-                    <img src="images/NCA_Step_cut.png" height="100%"/>
-                    <br><br>
-                    <p>
-                        Given an input state $\mathbf{S}^t \in R^{H \times W \times C}$ at time step $t$,
-                        each cell perceives its neighbors on various scales with the same perception layer.
-                        The perception tensor of each scale is then upsampled and summed up, and is concatenated with
-                        the positional encoding tensor $\mathbf{P}_{xy}$.
-                        Each cell $s^t_{ij}$ then applies the same update rule, parametrized by a small neural network.
-                        Finally, all cells perform stochastic residual update to determine the state of the cells in
-                        time $t + \Delta t$.
-
-                    </p>
-
-
-                </div>
-            </div>
-        </div>
-
-
-    </div>
-</section>
-
-<section class="section hero is-light" id="style_transfer">
-    <div class="container is-max-desktop">
-        <h2 class="title is-3 has-text-centered">Neural Cellular Automata</h2>
-
-
-        <div class="columns is-centered">
-
-
-            <!-- Visual Effects. -->
-            <div class="column">
-                <div class="content">
-                    <h3 class="title is-5 has-text-centered">Target Appearance</h3>
-                    <p>
-                        Our <i>NCA-FM</i> model learns a desired texture pattern from a given target
-                        appearance image. <br><br><br><br>
-                    </p>
-<!--                     <img src="images/style_transfer_appearance/cartoon_fire_6.png" height="100%"/> -->
-                    <img src="images/style_transfer_appearance/cartoon_water_1.png" height="100%"/>
-<!--                     <img src="images/style_transfer_appearance/USA1.png" height="100%"/>
-                    <img src="images/style_transfer_appearance/cartoon_fire_4.png" height="100%"/> -->
-                    <img src="images/style_transfer_appearance/cartoon_water_3.png" height="100%"/>
-<!--                     <img src="images/style_transfer_appearance/LGBT.jpg" height="100%"/>
-                    <img src="images/style_transfer_appearance/cartoon_fire_2.png" height="100%"/> -->
-<!--                     <img src="images/style_transfer_appearance/cartoon_water_2.png" height="100%"/> -->
-<!--                     <img src="images/style_transfer_appearance/cartoon_fire_1.png" height="100%"/> -->
-<!--                     <img src="images/style_transfer_appearance/cartoon_water_4.png" height="100%"/> -->
-<!--                     <img src="images/style_transfer_appearance/cartoon_fire_3.png" height="100%"/> -->
-
-                </div>
-            </div>
-            <!--/ Visual Effects. -->
-
-            <!-- Matting. -->
-            <div class="column">
-                <h3 class="title is-5 has-text-centered">Target Dynamics</h3>
-                <div class="columns is-centered">
-                    <div class="column content">
-                        <p>
-                            Our model can learn motion from a target video and transfer this motion to the target
-                            appearance image. <br><br><br><br>
-                        </p>
-
-                        <video controls playsinline height="100%">
-                            <source src="videos/real_mp4/sea_2.mp4" type="video/mp4">
-                         </video>
-
-                        <video controls playsinline height="100%">
-                            <source src="videos/real_mp4/sea_2.mp4" type="video/mp4">
-                        </video>
-
-
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="column">
-                <h3 class="title is-5 has-text-centered">Synthesized Results</h3>
-                <div class="columns is-centered">
-                    <div class="column content">
-                        <p>
-                            Our model synthesizes realistic dynamic texture videos. Each synthesized video frame
-                            resembles the target appearance, while the the concatenation of frames induces the motion of
-                            the target dynamics.
-                        </p>
-
-                         <video controls playsinline height="100%">
-                            <source src="videos/style_transfer/sea_2-cartoon_water_1.mp4" type="video/mp4">
-                        </video>
-
-
-                        <video controls playsinline height="100%">
-                            <source src="videos/style_transfer/sea_2-cartoon_water_3.mp4" type="video/mp4">
-                        </video>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-    </div>
-</section>
-
 
 <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
         <h2 class="title">BibTeX</h2>
-        <pre><code>@InProceedings{NCA-FM,
-  title     = {Neural Cellular Automata Foundation Model},
-  author    = {Qing Li, Guangyu Wang},
-  booktitle = {Proceedings},
-  year      = {2025},
+        <pre><code>@InProceedings{,
+  title     = {NoiseNCA: Noisy Seed Improves Spatio-Temporal Continuity of Neural Cellular Automata},
+  author    = {},
+  booktitle = {},
+  year      = {2024},
 }</code></pre>
     </div>
 
