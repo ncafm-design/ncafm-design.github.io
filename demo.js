@@ -1,4 +1,4 @@
-import {DyNCA} from './dynca.js'
+import {NoiseNCA} from './noiseNCA.js'
 
 function isInViewport(element) {
     var rect = element.getBoundingClientRect();
@@ -25,7 +25,7 @@ export function createDemo(divId) {
     const canvas = $('#demo-canvas');
     canvas.width = W * 6; //so we can render hexells
     canvas.height = H * 6;
-    let gl = canvas.getContext("webgl2");
+    let gl = canvas.getContext("webgl2", {antialias: true, preserveDrawingBuffer: true});
 
     if (!gl) {
         console.log('your browser/OS/drivers do not support WebGL2');
@@ -70,33 +70,25 @@ export function createDemo(divId) {
         zoom: 1.0,
         alignment: 0,
         rotationAngle: 0,
-        rate: 1.0,
+        dt: 1.0,
+        dx: 1.0,
+        dy: 1.0,
+        isotropic: true,
 
-        texture_name: "flames",
-        motion_name: "0",
-        video_name: "water_3",
+        texture_name: "bubbly_0101",
 
 
         texture_img: null,
-        motion_img: null,
-        video_gif: null,
 
         texture_idx: 0,
-        motion_idx: 1,
     };
 
     let metadata = null;
-    let exp_type = "VectorFieldMotion";
-    // let exp_type = "VideoMotion"
 
     let gui = null;
     let currentTexture = null;
-    let currentMotion = null;
-    // const initTexture = "interlaced_0172";
 
-    const initTexture = "flames";
-    const initVideo = "water_3";
-    const initMotion = "up";
+    const initTexture = "bubbly_0101";
 
     var videoStream = canvas.captureStream(30);
     var mediaRecorder = new MediaRecorder(videoStream);
@@ -111,7 +103,7 @@ export function createDemo(divId) {
         chunks = [];
         var videoURL = URL.createObjectURL(blob);
         var link = document.createElement("a");
-        link.download = params.texture_name + "-" + params.motion_name;
+        link.download = params.texture_name;
         link.href = videoURL;
         document.body.appendChild(link);
         link.click();
@@ -131,60 +123,47 @@ export function createDemo(divId) {
 
 
         let texture_names = metadata['texture_names'];
+
         // let texture_images = metadata['texture_images'];
 
-        let motion_names = metadata['motion_names'];
-        let motion_images = metadata['motion_images'];
-
-        // let vec_field_model_files = metadata['vec_field_model_files'];
-        // let video_model_files = metadata['video_model_files'];
-
-        let video_names = metadata['video_names'];
-        // let video_appearance_images = metadata['video_appearance'];
-        // let video_gifs = metadata['video_gifs'];
-
         async function setTextureModel(idx) {
-            if (exp_type == "VectorFieldMotion") {
-                params.texture_name = texture_names[idx];
-                params.texture_img = "images/texture/" + texture_names[idx] + ".jpg"
-                params.modelSet = "data/vec_field_models/" + params.model_type + "/" + texture_names[idx] + ".json"
-                // params.modelSet = vec_field_model_files[params.model_type][idx]
-                // params.texture_img = texture_images[idx];
-            } else {
-                // params.modelSet = 'data/video_models/video_' + params.model_type + '.json';
-                // params.modelSet = 'data/video_models/256_video_' + params.model_type + '.json';
-                // params.modelSet = video_model_files[params.model_type][idx]
-                // params.modelSet = 'data/video_models/128_video_' + params.model_type + '.json';
-                // alert(params.modelSet)
-                params.video_name = video_names[idx];
-                params.video_gif = "videos/real_gif/" + video_names[idx] + ".gif"
-                params.texture_img = "images/picked_video_frames/" + video_names[idx] + ".png"
-                params.modelSet = "data/video_models/" + params.model_type + "/" + video_names[idx] + ".json"
-                // params.video_gif = video_gifs[idx];
-                // params.texture_img = video_appearance_images[idx];
-            }
+            params.texture_name = texture_names[idx];
+            params.texture_img = "images/texture/" + texture_names[idx] + ".jpg"
+
+            params.modelSet = "data/models/" + texture_names[idx] + ".json"
             params.texture_idx = idx;
-            updateUI();
+
+            $("#origtex").style.background = "url('" + params.texture_img + "')";
+            $("#origtex").style.backgroundSize = "100%100%";
+            let dtd = document.createElement('p')
+            dtd.innerHTML = "Texture Name: " + params.texture_name
+            // dtd.href = "https://www.robots.ox.ac.uk/~vgg/data/dtd/"
+            $("#texhinttext").innerHTML = '';
+            $("#texhinttext").appendChild(dtd);
+
+
             updateCA();
+
+            var video = document.getElementById('multiscale_video');
+            video.innerHTML = "";
+            var source = document.createElement('source');
+            source.setAttribute('src', "./videos/multiscale_videos/large_" + params.texture_name + "_low.mp4");
+            source.setAttribute('type', 'video/mp4');
+            video.appendChild(source);
+            video.load()
+            video.play();
 
         }
 
-        let len = (exp_type == "VectorFieldMotion") ? texture_names.length : video_names.length;
+        let len = texture_names.length;
         for (let idx = 0; idx < len; idx++) {
             let media_path = "";
             let texture_name = "";
-            if (exp_type == "VectorFieldMotion") {
-                texture_name = texture_names[idx];
-                media_path = params.texture_img = "images/texture/" + texture_name + ".jpg"
-            } else {
-                texture_name = video_names[idx];
-                media_path = "images/picked_video_frames/" + texture_name + ".png";
-            }
 
-            // let media_path = (exp_type == "VectorFieldMotion") ? texture_images[idx] : video_appearance_images[idx];
-            // let media_path = texture_images[idx];
+            texture_name = texture_names[idx];
+            media_path = params.texture_img = "images/texture/" + texture_name + ".jpg"
 
-            // let texture_name = (exp_type == "VectorFieldMotion") ? texture_names[idx] : video_names[idx];
+
             const texture = document.createElement('div');
             texture.style.background = "url('" + media_path + "')";
             texture.style.backgroundSize = "100%100%";
@@ -203,75 +182,20 @@ export function createDemo(divId) {
             };
             let gridBox = $('#texture');
 
-            if (exp_type == "VectorFieldMotion") {
-                if (texture_name == initTexture) {
-                    currentTexture = texture;
-                    texture.style.borderColor = "rgb(245 140 44)";
-                    gridBox.prepend(texture);
 
-                } else {
-                    gridBox.insertBefore(texture, gridBox.lastElementChild);
-                }
+            if (texture_name == initTexture) {
+                currentTexture = texture;
+                texture.style.borderColor = "rgb(245 140 44)";
+                gridBox.prepend(texture);
+
             } else {
-                if (texture_name == initVideo) {
-                    currentTexture = texture;
-                    texture.style.borderColor = "rgb(245 140 44)";
-                    gridBox.prepend(texture);
-
-                } else {
-                    gridBox.insertBefore(texture, gridBox.lastElementChild);
-                }
+                gridBox.insertBefore(texture, gridBox.lastElementChild);
             }
 
 
         }
         setTextureModel(0);
 
-        function setMotionModel(idx) {
-            params.motion_idx = idx;
-            params.motion_name = motion_names[idx];
-            params.motion_img = motion_images[idx];
-            updateUI();
-            if (ca != null) {
-                ca.clearCircle(0, 0, 1000);
-                ca.paint(0, 0, 10000, params.motion_idx, [0, 0]);
-            }
-
-            // updateUI();
-        }
-
-        if (exp_type == "VectorFieldMotion") {
-            for (let idx = 0; idx < motion_names.length; idx++) {
-                let motion_name = motion_names[idx];
-                const motion = document.createElement('div');
-                motion.style.background = "url('" + motion_images[idx] + "')";
-                motion.style.backgroundSize = "100%100%";
-                motion.id = name; //html5 support arbitrary id:s
-                motion.className = 'texture-square';
-                motion.onclick = () => {
-                    // removeOverlayIcon();
-                    currentMotion.style.borderColor = "white";
-                    currentMotion = motion;
-                    motion.style.borderColor = "rgb(245 140 44)";
-                    if (!window.matchMedia('(min-width: 500px)').matches && navigator.userAgent.includes("Chrome")) {
-                        motion.scrollIntoView({behavior: "smooth", block: "nearest", inline: "center"})
-                    }
-                    setMotionModel(idx);
-                };
-                let gridBox = $('#motion');
-
-                if (motion_name == initMotion) {
-                    currentMotion = motion;
-                    motion.style.borderColor = "rgb(245 140 44)";
-                    gridBox.prepend(motion);
-                } else {
-                    gridBox.insertBefore(motion, gridBox.lastElementChild);
-                }
-
-
-            }
-            setMotionModel(params.motion_idx);
-        }
 
         //
         // $$(".pattern-selector").forEach(sel => {
@@ -319,13 +243,9 @@ export function createDemo(divId) {
     }
 
     function createCA() {
-        ca = new DyNCA(gl, params.models, [W, H], gui, params.our_version);
-        if (exp_type == "VectorFieldMotion") {
-            ca.paint(0, 0, 10000, params.motion_idx, [0.5, 0.5]);
-        } else {
-            // ca.paint(0, 0, 10000, params.texture_idx, [0.5, 0.5]);
-            ca.paint(0, 0, 10000, 0, [0.5, 0.5]);
-        }
+        ca = new NoiseNCA(gl, params.models, [W, H], gui, params.our_version);
+
+        ca.paint(0, 0, 10000, 0, [0.5, 0.5]);
 
         ca.clearCircle(0, 0, 1000);
         ca.alignment = params.alignment;
@@ -350,6 +270,62 @@ export function createDemo(divId) {
         prevPos = pos;
     }
 
+
+    function updateDx() {
+        params.isotropic = $('#scaling_mode').checked;
+        let dx = parseFloat($('#dx').value);
+        let dx_ratio = (dx - $('#dx').min) / ($('#dx').max - $('#dx').min)
+        $('#dx').style.background = "linear-gradient(to right, indianred 0%, greenyellow " + (dx_ratio * 100) + "%, #fff " + (dx_ratio * 100) + "%, #fff 100%)";
+
+
+        if (params.isotropic) {
+            let dy = dx;
+            $('#dy').value = dy;
+            $('#dy').style.background = "linear-gradient(to right, indianred 0%, greenyellow " + (dx_ratio * 100) + "%, #fff " + (dx_ratio * 100) + "%, #fff 100%)";
+            params.dy = Math.pow(2.0, -dy);
+            $('#dyLabel').innerHTML = params.dy.toFixed(2);
+
+        }
+
+        params.dx = Math.pow(2.0, -dx);
+
+        $('#dxLabel').innerHTML = params.dx.toFixed(2);
+        updateDt();
+
+    }
+
+    function updateDy() {
+        params.isotropic = $('#scaling_mode').checked;
+        let dy = parseFloat($('#dy').value);
+        let dy_ratio = (dy - $('#dy').min) / ($('#dy').max - $('#dy').min)
+        $('#dy').style.background = "linear-gradient(to right, indianred 0%, greenyellow " + (dy_ratio * 100) + "%, #fff " + (dy_ratio * 100) + "%, #fff 100%)";
+
+
+        if (params.isotropic) {
+            let dx = dy;
+            $('#dx').value = dx;
+            $('#dx').style.background = "linear-gradient(to right, indianred 0%, greenyellow " + (dy_ratio * 100) + "%, #fff " + (dy_ratio * 100) + "%, #fff 100%)";
+            params.dx = Math.pow(2.0, -dx);
+            $('#dxLabel').innerHTML = params.dx.toFixed(2);
+
+        }
+
+        params.dy = Math.pow(2.0, -dy);
+        $('#dyLabel').innerHTML = params.dy.toFixed(2);
+
+        updateDt();
+
+    }
+
+
+    function updateDt() {
+
+        params.dt = parseFloat($('#dt').value);
+        params.dt = Math.min(params.dt, params.dx * params.dx, params.dy * params.dy);
+        $('#dt').value = params.dt;
+        $('#dtLabel').innerHTML = params.dt.toFixed(2);
+        $('#dt').style.background = "linear-gradient(to right, indianred 0%, greenyellow " + (params.dt * 100) + "%, #fff " + (params.dt * 100) + "%, #fff 100%)";
+    }
 
     function updateUI() {
         $$('#model-hints span').forEach(e => {
@@ -377,127 +353,31 @@ export function createDemo(divId) {
 
 
         params.rotationAngle = parseInt($('#rotation').value);
-        $('#rotationLabel').innerHTML = params.rotationAngle + " deg";
-
-        // params.rate = parseFloat($('#rate').value);
-        // $('#rateLabel').innerHTML = params.rate.toFixed(2);
+        $('#rotationLabel').innerHTML = params.rotationAngle + "&deg;";
 
 
-        if (exp_type == "VectorFieldMotion") {
-            $("#origtex").style.background = "url('" + params.texture_img + "')";
-            $("#origtex").style.backgroundSize = "100%100%";
-            let dtd = document.createElement('p')
-            dtd.innerHTML = "Texture Name: <br>" + params.texture_name
-            // dtd.href = "https://www.robots.ox.ac.uk/~vgg/data/dtd/"
-            $("#texhinttext").innerHTML = '';
-            $("#texhinttext").appendChild(dtd);
 
-            $("#origmot").style.background = "url('" + params.motion_img + "')";
-            $("#origmot").style.backgroundSize = "100%100%";
 
-            let oai = document.createElement('p')
-            oai.innerHTML = "Motion name: <br>" + params.motion_name
-            // oai.href = "https://www.bukowskis.com/en/auctions/H042/96-franciska-clausen-contre-composition-composition-neoplasticiste-hommage-a-mondrian";
-            $("#mothinttext").innerHTML = '';
-            $("#mothinttext").appendChild(oai);
 
-        } else {
-            $("#origtex").style.background = "url('" + params.video_gif + "')";
-            $("#origtex").style.backgroundSize = "100%100%";
 
-            let oai = document.createElement('p')
-            oai.innerHTML = "Target Dynamics: " + params.video_name
-            // oai.href = "https://www.bukowskis.com/en/auctions/H042/96-franciska-clausen-contre-composition-composition-neoplasticiste-hommage-a-mondrian";
-            $("#texhinttext").innerHTML = '';
-            $("#texhinttext").appendChild(oai);
-        }
 
 
         $('#zoomOut').classList.toggle('disabled', params.zoom <= 1.0);
         $('#zoomIn').classList.toggle('disabled', params.zoom >= maxZoom);
     }
 
-    function clearPalette() {
-        let textureGridBox = $('#texture');
-        textureGridBox.innerHTML = '<div class="whitespace"></div>';
-        let motionGridBox = $('#motion');
-        motionGridBox.innerHTML = '<div class="whitespace"></div>';
-
-        $("#origmot").style.background = '';
-        $("#origtex").style.background = '';
-        $("#mothinttext").innerHTML = '';
-        $("#texhinttext").innerHTML = '';
-
-    }
+    // function Screenshot(name) {
+    //     const uri = canvas.toDataURL();
+    //     var link = document.createElement("a");
+    //     link.download = params.texture_name + "-dx" + params.dx + ".png";
+    //     link.href = uri;
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    //     // delete link;
+    // }
 
     function initUI() {
-        let spriteX = 0;
-        document.getElementById("exp_type_vector_motion").onclick = function () {
-            exp_type = "VectorFieldMotion";
-            clearPalette();
-
-            document.getElementById("select_demo_type").innerText = "Demo Type: Vector Field Motion"
-
-            $("#motion").style.display = '';
-            // $("#motion_overlay_icon").style.display = '';
-            // $("#motion_overlay_grad").style.display = '';
-            $("#motion_selector_title").style.display = '';
-            $("#pattern_selector_title").innerHTML = '<span>Target Appearance</span>';
-            $("#motion_selector_title").innerHTML = '<span>Target Vector Field</span>';
-
-            $("#origtex").style.display = '';
-            $("#texhinttext").style.display = '';
-            $("#origmot").style.display = '';
-            $("#mothinttext").style.display = '';
-
-            initMetaData(false);
-        }
-        document.getElementById("exp_type_video_motion").onclick = function () {
-            clearPalette();
-            exp_type = "VideoMotion";
-            document.getElementById("select_demo_type").innerText = "Demo Type: Video Motion"
-            // $("#motion").style.display = 'none';
-            // $("#motion_overlay_icon").style.display = 'none';
-            // $("#motion_overlay_grad").style.display = 'none';
-
-            $("#pattern_selector_title").innerHTML = '<span>Target Appearance</span>';
-
-            $("#motion_selector_title").innerHTML = '<span></span>';
-
-            // $("#motion").style.display = 'none';
-            $("#motion_selector_title").style.display = 'contents';
-            $("#motion").style.display = 'contents';
-
-
-            $("#origtex").style.display = '';
-            $("#texhinttext").style.display = '';
-            $("#origmot").style.display = '';
-            $("#mothinttext").style.display = '';
-
-            initMetaData(false);
-
-        }
-
-        $('#play-pause').onclick = () => {
-            paused = !paused;
-            updateUI();
-        };
-        $('#reset').onclick = () => {
-            if (exp_type == "VectorFieldMotion") {
-                ca.paint(0, 0, 10000, params.motion_idx, [0.5, 0.5]);
-            } else {
-                ca.paint(0, 0, 10000, 0, [0.5, 0.5]);
-            }
-
-            ca.clearCircle(0, 0, 1000);
-
-            // ca.clearCircle(0, 0, 1000);
-            // ca.paint(0, 0, 10000, params.model, [0, 0]);
-        };
-        $('#benchmark').onclick = () => {
-            ca.benchmark();
-        };
-
         $('#record').onclick = () => {
             recording = !recording
             $('#record_on').style.display = recording ? "inline" : "none";
@@ -508,6 +388,26 @@ export function createDemo(divId) {
                 mediaRecorder.stop();
             }
         };
+
+        // $('#screenshot').onclick = () => {
+        //     Screenshot();
+        // };
+
+        $('#play-pause').onclick = () => {
+            paused = !paused;
+            $('#play').style.display = paused ? "inline" : "none";
+            $('#pause').style.display = !paused ? "inline" : "none";
+            // updateUI();
+        };
+        $('#reset').onclick = () => {
+            ca.paint(0, 0, 10000, 0, [0.5, 0.5]);
+
+            ca.clearCircle(0, 0, 1000);
+
+        };
+        // $('#benchmark').onclick = () => {
+        //     ca.benchmark();
+        // };
 
         $$('#alignSelect input').forEach((sel, i) => {
             sel.onchange = () => {
@@ -528,19 +428,7 @@ export function createDemo(divId) {
                 }
             }
         });
-        $$('#configSelect input').forEach((sel, i) => {
-            sel.onchange = () => {
-                if (i == 0) {
-                    params.modelSet = params.modelSet.replace("large", "small");
-                    params.model_type = "small";
-                } else {
-                    params.modelSet = params.modelSet.replace("small", "large");
-                    params.model_type = "large";
-                }
 
-                updateCA();
-            }
-        });
         $$('#gridSelect input').forEach(sel => {
             sel.onchange = () => {
                 params.hexGrid = sel.id == 'gridHex';
@@ -553,8 +441,18 @@ export function createDemo(divId) {
         $('#resolution').onchange = updateUI;
         $('#resolution').oninput = updateUI;
 
-        // $('#rate').onchange = updateUI;
-        // $('#rate').oninput = updateUI;
+        $('#dt').onchange = updateDt;
+        $('#dt').oninput = updateDt;
+
+
+        $('#dx').onchange = updateDx;
+        $('#dx').oninput = updateDx;
+
+        $('#dy').onchange = updateDy;
+        $('#dy').oninput = updateDy;
+
+        $('#scaling_mode').onchange = updateDx;
+        $('#scaling_mode').oninput = updateDx;
 
 
         $('#zoomIn').onclick = () => {
@@ -609,9 +507,14 @@ export function createDemo(divId) {
         if (firstTime) {
             createGUI(models);
             initUI();
+            updateUI();
+            updateDx();
+            updateDy();
             requestAnimationFrame(render);
+
         }
-        updateUI();
+
+
     }
 
     // updateCA();
@@ -636,7 +539,9 @@ export function createDemo(divId) {
 
         ca.rotationAngle = params.rotationAngle;
         ca.alignment = params.alignment;
-        ca.rate = params.rate;
+        ca.dt = params.dt;
+        ca.dx = params.dx;
+        ca.dy = params.dy
         // ca.hexGrid = params.hexGrid;
 
         if (!paused) {
