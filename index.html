@@ -24,12 +24,12 @@
 
     <meta charset="utf-8">
     <meta name="description"
-          content="NoiseNCA: Noisy Seed Improves Spatio-Temporal Continuity of Neural Cellular Automata">
+          content="Neural Cellular Automata Foundation Model">
     <meta name="keywords"
           content="NCA, Textures, Texture Synthesis, Neural Cellular Automata, Turing Patterns, Reaction Diffusion,
           Partial Differential Equations, PDE">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NoiseNCA: Noisy Seed Improves Spatio-Temporal Continuity of Neural Cellular Automata</title>
+    <title>Neural Cellular Automata Foundation Model</title>
 
 
     <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
@@ -57,7 +57,7 @@
     <script src="https://distill.pub/template.v2.js"></script>
     <link rel="stylesheet" href="style.css">
     <script src="twgl.min.js"></script>
-    <script type="module" src="noiseNCA.js"></script>
+    <script type="module" src="ncafm.js"></script>
     <script type="module" src="./demo.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
@@ -114,24 +114,22 @@
 
                                         <div class="is-size-5 publication-authors">
                                             <span class="author-block">
-                                                <a href="https://scholar.google.com/citations?hl=en&user=bddQ6pQAAAAJ">Ehsan Pajouheshgar</a>,</span>
+                                                <a href="https://scholar.google.com/citations?hl=zh-CN&user=thYeoHAAAAAJ">Qing Li</a>,</span>
                                             <span class="author-block">
-                                                <a href="https://scholar.google.com/citations?user=jvCvNPQAAAAJ&hl=en/">Yitao Xu</a>,</span>
-                                            <span class="author-block">
-                                                <a href="https://www.epfl.ch/labs/ivrl/">Sabine Süsstrunk</a></span>
+                                                <a href="https://scholar.google.com/citations?hl=zh-TW&user=9ZT29A4AAAAJ">Guangyu Wang</a></span>
 
 
                                         </div>
                                         <div class="is-size-6 publication-authors">
-                                            <span class="author-block">Image and Visual Representation Lab (IVRL)</span>
+                                            <span class="author-block">Guangyu Wang Lab</span>
                                         </div>
 
                                         <div class="is-size-6 publication-authors">
-                                            <span class="author-block">École Polytechnique Fédérale de Lausanne (EPFL)</span>
+                                            <span class="author-block">Houston Methodist Research Institute</span>
                                         </div>
 
                                         <div class="is-size-4 publication-authors">
-                                            <span class="author-block">Artificial Life 2024 Conference</span>
+                                            <span class="author-block">Processing</span>
                                         </div>
 
 
@@ -203,7 +201,7 @@
         <div class="is-centered has-text-centered">
             <p style="font-size: 14pt">
                 In addition to the common interactive controls in NCA models such as <i>Cell Alignment</i> and <i>Rotation</i>,
-                and <i>Regeneration Brush</i>, <b>NoiseNCA</b> allows continuous control over the rate of pattern
+                and <i>Regeneration Brush</i>, <b>NCA-FM</b> allows continuous control over the rate of pattern
                 formation and the scale of the synthesized pattern using the $\Delta t$ and $(\Delta x, \Delta y)$
                 sliders,
                 respectively.
@@ -447,13 +445,13 @@
                     <p>
                         Neural Cellular Automata (NCA) is a class of Cellular Automata where the update rule is
                         parameterized by a neural network that can be trained using gradient descent.
-                        In this paper, we focus on NCA models used for texture synthesis, where the update rule is
+<!--                         In this paper, we focus on NCA models used for texture synthesis, where the update rule is
                         inspired by partial differential equations (PDEs) describing reaction-diffusion systems. To
                         train the NCA model, the spatio-termporal domain is discretized, and Euler integration is used
                         to numerically simulate the PDE. However, whether a trained NCA truly learns the continuous
                         dynamic described by the corresponding PDE or merely overfits the discretization used in
                         training remains an open question. We study NCA models at the limit where space-time
-                        discretization approaches continuity.
+                        discretization approaches continuity. -->
                         We find that existing NCA models tend to overfit the training discretization, especially in the
                         proximity of the initial condition, also called "seed". To address this, we propose a solution
                         that utilizes uniform noise as the initial condition. We demonstrate the effectiveness of our
@@ -489,10 +487,10 @@
     <div class="container is-max-desktop content">
         <h2 class="title">BibTeX</h2>
         <pre><code>@InProceedings{,
-  title     = {NoiseNCA: Noisy Seed Improves Spatio-Temporal Continuity of Neural Cellular Automata},
-  author    = {},
-  booktitle = {},
-  year      = {2024},
+  title     = {Neural Cellular Automata Foundation Model},
+  author    = {Qing Li, Guangyu Wang},
+  booktitle = {Proceedings},
+  year      = {2025},
 }</code></pre>
     </div>
 
