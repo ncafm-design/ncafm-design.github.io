@@ -971,7 +971,8 @@ export class NoiseNCA {
         const uniforms = {};
         for (const name in inputs) {
             const val = inputs[name];
-            if (val._type == 'tensor') {
+            // if (val._type == 'tensor') {
+            if (val&&val._type == 'tensor') {
                 setTensorUniforms(uniforms, name, val);
             } else {
                 uniforms[name] = val;
