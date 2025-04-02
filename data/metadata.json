@@ -1,18 +1,15 @@
 {
-  "bubbly_0101": {
+  "texture_names": [
+  "bubbly_0101",
+  "LYM-TCGA-AAWGSCHH"
+  ]
+
+  "__default__": {
     "deltaX": 1,
     "deltaY": 1,
-    "physicalSizeX": 1,
-    "physicalSizeY": 1,
-    "unit": "nm",
-    "compatibleWithNoiseNCA": true  
-  },
-  "LYM-TCGA-AAWGSCHH": {
-    "deltaX": 0.5,                
-    "deltaY": 0.5,
-    "physicalSizeX": 0.8,
-    "physicalSizeY": 0.8,
-    "unit": "μm",
-    "compatibleWithNoiseNCA": false
+    "physicalSizeX": 512,
+    "physicalSizeY": 512,
+    "unit": "nm"
   }
+  
 }
