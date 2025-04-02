@@ -1,15 +1,18 @@
 {
-  "texture_names": [
-    "LYM-TCGA-AAWGSCHH": {
+  "bubbly_0101": {
     "deltaX": 1,
     "deltaY": 1,
     "physicalSizeX": 1,
     "physicalSizeY": 1,
-    "unit": "nm"
+    "unit": "nm",
+    "compatibleWithNoiseNCA": true  // 新增兼容标记
   },
-    "bubbly_0101"
-    
-
-
-  ]
+  "LYM-TCGA-AAWGSCHH": {
+    "deltaX": 0.5,                  // 示例值，需根据实际数据填写
+    "deltaY": 0.5,
+    "physicalSizeX": 0.8,
+    "physicalSizeY": 0.8,
+    "unit": "μm",
+    "compatibleWithNoiseNCA": false
+  }
 }
