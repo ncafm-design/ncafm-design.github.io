@@ -500,6 +500,8 @@ export function createDemo(divId) {
 
         const r = await fetch(params.modelSet);
         const models = await r.json();
+        console.log('updateCA models', models)
+        console.log('updateCA r', r)
         params.models = models;
         createCA();
 
