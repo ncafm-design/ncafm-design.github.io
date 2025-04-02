@@ -1,15 +1,8 @@
 {
   "texture_names": [
-  "bubbly_0101",
-  "LYM-TCGA-AAWGSCHH"
+    "LYM-TCGA-AAWGSCHH",
+    "bubbly_0101"
+  
   ]
-
-  "__default__": {
-    "deltaX": 1,
-    "deltaY": 1,
-    "physicalSizeX": 512,
-    "physicalSizeY": 512,
-    "unit": "nm"
-  }
   
 }
