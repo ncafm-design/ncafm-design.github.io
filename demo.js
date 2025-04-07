@@ -129,7 +129,6 @@ export function createDemo(divId) {
             metadata = params.metadata
         }
 
-
         let texture_names = metadata['texture_names'];
         // let texture_images = metadata['texture_images'];
 
