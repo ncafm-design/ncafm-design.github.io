@@ -1,4 +1,4 @@
-import {DyNCA} from './dynca.js'
+import {NCA} from './ncafm.js'
 
 function isInViewport(element) {
     var rect = element.getBoundingClientRect();
@@ -319,7 +319,7 @@ export function createDemo(divId) {
     }
 
     function createCA() {
-        ca = new DyNCA(gl, params.models, [W, H], gui, params.our_version);
+        ca = new NCA(gl, params.models, [W, H], gui, params.our_version);
         if (exp_type == "VectorFieldMotion") {
             ca.paint(0, 0, 10000, params.motion_idx, [0.5, 0.5]);
         } else {
