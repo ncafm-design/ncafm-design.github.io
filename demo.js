@@ -189,7 +189,8 @@ export function createDemo(divId) {
             texture.style.background = "url('" + media_path + "')";
             texture.style.backgroundSize = "100%100%";
             // texture.style.backgroundSize = "100px100px";
-            texture.id = name; //html5 support arbitrary id:s
+            // texture.id = name; //html5 support arbitrary id:s ####
+            texture.id = texture_name; //html5 support arbitrary id:s  ####
             texture.className = 'texture-square';
             texture.onclick = () => {
                 // removeOverlayIcon();
