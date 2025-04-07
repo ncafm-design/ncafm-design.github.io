@@ -758,7 +758,7 @@ function createDenseInfo(gl, params) {
     return info;
 }
 
-export class DyNCA {
+export class NCA {
     constructor(gl, models, gridSize, gui, our_version = true) {
         // models is basically the json file
 
