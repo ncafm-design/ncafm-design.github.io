@@ -422,6 +422,10 @@ input[type="radio"] {
     height: 0;
     padding-top: calc(100% - 2 * var(--border-width));
     scroll-snap-align: center;
+
+    position: relative; /* 添加这行 */ ####
+    cursor: pointer; /* 添加这行 */
+    z-index: 1; /* 添加这行 */
 }
 
 .texture-overlay, #texture {
