@@ -1,4 +1,4 @@
-import {DyNCA} from './dynca.js'
+import {NCA} from './ncafm.js'
 
 function isInViewport(element) {
     var rect = element.getBoundingClientRect();
